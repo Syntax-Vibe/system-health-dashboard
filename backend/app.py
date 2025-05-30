@@ -13,7 +13,7 @@ def index():
 def health():
     return jsonify({
         "cpu": psutil.cpu_percent(),
-        "ram": psutil.virtual_memory().percent,
+        "memory": psutil.virtual_memory().percent,  # ← تغییر این خط
         "disk": psutil.disk_usage('/').percent,
         "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
