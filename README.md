@@ -27,7 +27,8 @@ A lightweight Flask-based dashboard to monitor your system's real-time health â€
 
 ## ðŸ“¸ Screenshot
 
-![Dashboard Screenshot](screenshot.png)
+![Dashboard Screenshot](Screenshot.png)
+
 
 
 
