@@ -1,18 +1,19 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 import psutil
-import datetime
+from datetime import datetime
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='frontend')
 
 @app.route('/health')
 def health():
-    data = {
-        'cpu': psutil.cpu_percent(interval=1),
-        'memory': psutil.virtual_memory().percent,
-        'disk': psutil.disk_usage('/').percent,
-        'time': datetime.datetime.now().strftime('%H:%M:%S')
-    }
-    return jsonify(data)
+    return jsonify({
+        "cpu": f"{psutil.cpu_percent()}%",
+        "disk": f"{psutil.disk_usage('/').percent}%",
+        "memory": f"{psutil.virtual_memory().percent}%",
+        "time": datetime.now().strftime("%H:%M:%S")
+    })
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
