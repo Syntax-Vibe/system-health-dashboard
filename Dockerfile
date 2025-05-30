@@ -1,7 +1,9 @@
 FROM python:3.10
 
 WORKDIR /app
-COPY backend/app.py .
+
+# 👇 این خط کل پوشه backend رو کپی می‌کنه شامل app.py و frontend/index.html
+COPY backend /app
 
 RUN pip install flask psutil
 
