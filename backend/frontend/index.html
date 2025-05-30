@@ -3,16 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <title>System Health Dashboard</title>
+
+  <!-- اضافه کردن Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
+    let cpuData = [];
+    let memoryData = [];
+    let diskData = [];
+    let labels = [];
+
+    let cpuChart, memoryChart, diskChart;
+
     async function getData() {
       const res = await fetch('/health');
       const data = await res.json();
+
       document.getElementById('cpu').innerText = data.cpu + '%';
       document.getElementById('memory').innerText = data.memory + '%';
       document.getElementById('disk').innerText = data.disk + '%';
       document.getElementById('time').innerText = data.time;
+
+      const timeLabel = data.time;
+
+      // Push new data
+      labels.push(timeLabel);
+      cpuData.push(data.cpu);
+      memoryData.push(data.memory);
+      diskData.push(data.disk);
+
+      // Keep only latest 10 entries
+      if (labels.length > 10) {
+        labels.shift();
+        cpuData.shift();
+        memoryData.shift();
+        diskData.shift();
+      }
+
+      // Update charts
+      cpuChart.data.labels = labels;
+      cpuChart.data.datasets[0].data = cpuData;
+      cpuChart.update();
+
+      memoryChart.data.labels = labels;
+      memoryChart.data.datasets[0].data = memoryData;
+      memoryChart.update();
+
+      diskChart.data.labels = labels;
+      diskChart.data.datasets[0].data = diskData;
+      diskChart.update();
     }
-    setInterval(getData, 2000);
+
+    window.onload = () => {
+      const ctxCPU = document.getElementById('cpuChart').getContext('2d');
+      const ctxMemory = document.getElementById('memoryChart').getContext('2d');
+      const ctxDisk = document.getElementById('diskChart').getContext('2d');
+
+      cpuChart = new Chart(ctxCPU, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'CPU Usage (%)',
+            borderWidth: 1,
+            borderColor: 'red',
+            backgroundColor: 'rgba(255,0,0,0.1)',
+            data: cpuData
+          }]
+        }
+      });
+
+      memoryChart = new Chart(ctxMemory, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Memory Usage (%)',
+            borderWidth: 1,
+            borderColor: 'blue',
+            backgroundColor: 'rgba(0,0,255,0.1)',
+            data: memoryData
+          }]
+        }
+      });
+
+      diskChart = new Chart(ctxDisk, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Disk Usage (%)',
+            borderWidth: 1,
+            borderColor: 'green',
+            backgroundColor: 'rgba(0,255,0,0.1)',
+            data: diskData
+          }]
+        }
+      });
+
+      setInterval(getData, 2000);
+    };
   </script>
 </head>
 <body>
@@ -21,5 +111,10 @@
   <p>💻 استفاده از CPU: <span id="cpu">---</span></p>
   <p>🧠 استفاده از RAM: <span id="memory">---</span></p>
   <p>💾 فضای دیسک: <span id="disk">---</span></p>
+
+  <h2>📉 نمودارها</h2>
+  <canvas id="cpuChart" width="400" height="150"></canvas>
+  <canvas id="memoryChart" width="400" height="150"></canvas>
+  <canvas id="diskChart" width="400" height="150"></canvas>
 </body>
 </html>
