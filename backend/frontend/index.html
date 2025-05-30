@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>System Health Dashboard</title>
+  <script>
+    async function getData() {
+      const res = await fetch('/health');
+      const data = await res.json();
+      document.getElementById('cpu').innerText = data.cpu + '%';
+      document.getElementById('memory').innerText = data.memory + '%';
+      document.getElementById('disk').innerText = data.disk + '%';
+      document.getElementById('time').innerText = data.time;
+    }
+    setInterval(getData, 2000);
+  </script>
+</head>
+<body>
+  <h1>📊 داشبورد سلامت سیستم</h1>
+  <p>⏱️ ساعت: <span id="time">---</span></p>
+  <p>💻 استفاده از CPU: <span id="cpu">---</span></p>
+  <p>🧠 استفاده از RAM: <span id="memory">---</span></p>
+  <p>💾 فضای دیسک: <span id="disk">---</span></p>
+</body>
+</html>
