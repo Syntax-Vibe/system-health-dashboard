@@ -1,4 +1,4 @@
-# 🖥️ System Health Dashboard
+# System Health Dashboard
 
 🔗 **Live Demo**: [https://system-health-dashboard.onrender.com](https://system-health-dashboard.onrender.com)
 
